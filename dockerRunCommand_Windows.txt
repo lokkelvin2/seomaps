@@ -1,0 +1,7 @@
+docker run --rm -it -v /d/gitrepos/seomaps:/data -p 8080:80 maptiler/tileserver-gl
+
+Alternatively, you may change the /d/gitrepos/seomaps to whichever folder you may like which contains the mbtiles. The :/data must remain however. If the mbtiles is present/already downloaded, add it at the end like so
+
+docker run --rm -it -v /d/gitrepos/seomaps:/data -p 8080:80 maptiler/tileserver-gl nameoftiles.mbtiles
+
+As of now, seems to work. But original command I ran was using //d/gitrepos/seomaps:/data (note the double slash at the start). If both work then i'm not sure what the difference is.
