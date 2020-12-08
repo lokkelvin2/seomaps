@@ -1,0 +1,3 @@
+https://dev.to/kimcuonthenet/move-docker-desktop-data-distro-out-of-system-drive-4cg2
+
+may want to use this to move the virtual disks out of C: eventually
