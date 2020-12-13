@@ -82,5 +82,5 @@ wsl --unregister docker-desktop-data
 
 5) Make a permanent new folder (here it is E:\docker-desktop\data), and re-import the tar file
 ```bash
-wsl --import docker-desktop-data E:\docker-desktop\data D:\sometempdir\docker-desktop-data --version 2
+wsl --import docker-desktop-data E:\docker-desktop\data D:\sometempdir\docker-desktop-data.tar --version 2
 ```
