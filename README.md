@@ -57,9 +57,30 @@ and it should find the existing image.
 
 ## Notes on Directory Usage and Docker Installation
 
-Docker installation on Windows is, as of 11th Dec 2020, unable to set install directories and use directories.
-Found some pages online which recommend setting some environment variables and running in administrator to move the Docker installation,
-but it doesn't seem to affect the eventual virtual hard drives (refer to dockerCustomInstall.bat).
+The previous batch file for setting environment variables appears to not work. Docker will continue to install its main files into the standard C:\Program Files area.
+As of now, the batch file in old commits is not recommended. Just move the vhdx images file via the below commands.
 
-In particular, on Windows it appears that the images get stored directly into C:\Users\CurrentUser\AppData\Local\Docker\wsl.
-The 2 vhdx files appear to keep growing even if you remove and reinstall the same image, unsure how to manage this.
+Tested: As of 13/12/2020, using the commands found here [https://dev.to/kimcuonthenet/move-docker-desktop-data-distro-out-of-system-drive-4cg2] we move the problematic images
+vhdx file (the distro file is never that large) by doing the following (copied from the link):
+
+1) Stop Docker
+
+2) Run
+```bash
+wsl --shutdown
+```
+
+3) Export temporary tar.
+```bash
+wsl --export docker-desktop-data D:\sometempdir\docker-desktop-data.tar
+```
+
+4) Unregister, this also automatically deletes the vhdx file in C:\Users\SeoNotebook\AppData\Local\Docker\wsl
+```bash
+wsl --unregister docker-desktop-data
+```
+
+5) Make a permanent new folder (here it is E:\docker-desktop\data), and re-import the tar file
+```bash
+wsl --import docker-desktop-data E:\docker-desktop\data D:\sometempdir\docker-desktop-data --version 2
+```
