@@ -14,7 +14,7 @@ Install Docker. We'll be using [Tileserver GL](https://tileserver.readthedocs.io
 Detailed commands may be found in the text files, but the general command on Windows will look something like
 
 ```bash
-docker run --rm -it -v /f/tilestest:/data -p 8080:80 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose -c osm_liberty_config.json
+docker run --rm -it -v /f/tilestest:/data -p 8080:8080 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose -c osm_liberty_config.json
 ```
 
 where the directory used here to store the tiles is
@@ -24,6 +24,8 @@ F:\tilestest
 ```
 
 and so the docker argument "-v /f/tilestest:/data" should be changed to "-v whatever/your/path/is:/data".
+
+Remember to transfer the 'sprites' folder from osm-liberty into the 'data' folder.
 
 
 ## Offline Usage
@@ -84,3 +86,15 @@ wsl --unregister docker-desktop-data
 ```bash
 wsl --import docker-desktop-data E:\docker-desktop\data D:\sometempdir\docker-desktop-data.tar --version 2
 ```
+
+## Troubleshooting
+
+1) Specified path for "fonts" does not exist (/usr/src/app/node_modules/tileserver-gl/fonts).
+
+Run the default tileserver command without a config.json but with verbose output i.e.
+```bash
+docker run --rm -it -v /f/tilestest:/data -p 8080:8080 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose
+```
+
+Observe the output of the config.json, and amend the 'root' in the custom config.json accordingly. Likely this will be /app/node_modules/tileserver-gl/fonts i.e. without /usr/src.
+
