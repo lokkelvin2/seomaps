@@ -12,7 +12,7 @@
       "url": "mbtiles://osm-2017-07-03-v3_6_1-planet.mbtiles"
     }
   },
-  "sprite": "{styleJsonFolder}/sprites/osm-liberty",
+  "sprite": "{styleJsonFolder}/osm-liberty/sprites/osm-liberty",
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
     {

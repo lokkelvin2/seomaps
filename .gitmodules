@@ -1,0 +1,3 @@
+[submodule "osm-liberty"]
+	path = osm-liberty
+	url = https://github.com/maputnik/osm-liberty

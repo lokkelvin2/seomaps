@@ -1,0 +1,1 @@
+docker run --rm -it -v %CD%:/data -p 8080:8080 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose
