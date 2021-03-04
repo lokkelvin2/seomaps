@@ -16,3 +16,6 @@
 [submodule "jquery"]
 	path = jquery
 	url = https://github.com/jquery/jquery
+[submodule "bootstrap"]
+	path = bootstrap
+	url = https://github.com/twbs/bootstrap
