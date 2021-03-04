@@ -10,3 +10,6 @@
 [submodule "Leaflet"]
 	path = Leaflet
 	url = https://github.com/Leaflet/Leaflet
+[submodule "Leaflet.awesome-markers"]
+	path = Leaflet.awesome-markers
+	url = https://github.com/lvoogdt/Leaflet.awesome-markers
