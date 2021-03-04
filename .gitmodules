@@ -7,3 +7,6 @@
 [submodule "Leaflet.MousePosition"]
 	path = Leaflet.MousePosition
 	url = https://github.com/ardhi/Leaflet.MousePosition
+[submodule "Leaflet"]
+	path = Leaflet
+	url = https://github.com/Leaflet/Leaflet
