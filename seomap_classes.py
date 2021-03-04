@@ -14,12 +14,44 @@ import numpy as np
 
 class SMaps:
     def __init__(self, tiles="http://localhost:8080/styles/osm_liberty/{z}/{x}/{y}.png"):
+        
+        # first we repoint to local sources
+        self.setLocalScripts()
+        
+        # init the rest
         self.tilesource = tiles
         self.map = fo.Map(tiles=self.tilesource,attr="OSM/OMT")
         self.htmlfile = "foliumplot.html"
         
         # let's standardise adding the mouse position, no harm here
         self.addMousePosition()
+        
+    def setLocalScripts(self):
+        '''One method to set all of them locally.'''
+        
+        for i in range(len(fo.folium._default_js)):
+            if fo.folium._default_js[i][0] == 'leaflet':
+                fo.folium._default_js[i] = ('leaflet', './Leaflet/dist/leaflet.js')
+            elif fo.folium._default_js[i][0] == 'awesome_markers':
+                fo.folium._default_js[i] = ('awesome_markers', './Leaflet.awesome-markers/dist/leaflet.awesome-markers.js')
+            elif fo.folium._default_js[i][0] == 'jquery':
+                fo.folium._default_js[i] = ('jquery', './jquery/dist/jquery.min.js')
+            elif fo.folium._default_js[i][0] == 'bootstrap':
+                fo.folium._default_js[i] = ('bootstrap', './bootstrap/dist/js/bootstrap.min.js')
+            
+        for i in range(len(fo.folium._default_css)):
+            if fo.folium._default_css[i][0] == 'leaflet_css':
+                fo.folium._default_css[i] = ('leaflet_css', './Leaflet/dist/leaflet.css')
+            elif fo.folium._default_css[i][0] == 'awesome_markers_css':
+                fo.folium._default_css[i] = ('awesome_markers_css', './Leaflet.awesome-markers/dist/leaflet.awesome-markers.css')
+            elif fo.folium._default_css[i][0] == 'awesome_markers_font_css':
+                fo.folium._default_css[i] = ('awesome_markers_font_css', './Font-Awesome/css/font-awesome.min.css')
+            elif fo.folium._default_css[i][0] == 'bootstrap_css':
+                fo.folium._default_css[i] = ('bootstrap_css', './bootstrap/dist/css/bootstrap.min.css')
+            elif fo.folium._default_css[i][0] == 'bootstrap_theme_css':
+                fo.folium._default_css[i] = ('bootstrap_theme_css', './bootstrap/dist/css/bootstrap-theme.min.css')
+            elif fo.folium._default_css[i][0] == 'awesome_rotate_css':
+                fo.folium._default_css[i] = ('awesome_rotate_css', './folium/folium/templates/leaflet.awesome.rotate.css')
         
     def setHtmlFile(self,txt):
         self.htmlfile = txt
