@@ -19,3 +19,6 @@
 [submodule "bootstrap"]
 	path = bootstrap
 	url = https://github.com/twbs/bootstrap
+[submodule "folium"]
+	path = folium
+	url = https://github.com/python-visualization/folium
