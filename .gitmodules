@@ -13,3 +13,6 @@
 [submodule "Leaflet.awesome-markers"]
 	path = Leaflet.awesome-markers
 	url = https://github.com/lvoogdt/Leaflet.awesome-markers
+[submodule "jquery"]
+	path = jquery
+	url = https://github.com/jquery/jquery
