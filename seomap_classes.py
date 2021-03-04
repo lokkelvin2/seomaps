@@ -56,6 +56,10 @@ class SMaps:
     def setHtmlFile(self,txt):
         self.htmlfile = txt
     
+    def replaceLocalPlugins(self):
+        '''Since it's so difficult to replace the js/css for plugins, just going to directly edit the html.'''
+        
+    
     def plot(self):
         self.map.save(self.htmlfile)
         os.system(self.htmlfile)
