@@ -9,6 +9,7 @@ Created on Tue Dec  8 17:06:51 2020
 import os
 import folium as fo
 import folium.plugins as fop
+import re
 
 import numpy as np
 
@@ -59,9 +60,28 @@ class SMaps:
     def replaceLocalPlugins(self):
         '''Since it's so difficult to replace the js/css for plugins, just going to directly edit the html.'''
         
-    
+        # load the file
+        f = open(self.htmlfile, "r")
+        lines = f.readlines()
+        f.close()
+        
+        for i in range(len(lines)):
+            line = lines[i]
+            
+            # mousePosition
+            if re.search('MousePosition.js', line) is not None:
+                lines[i] = re.sub('<script src=.+?>', '<script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js">', line)
+            elif re.search('MousePosition.css', line) is not None:
+                lines[i] = re.sub('href=".+?"', 'href="./Leaflet.MousePosition/src/L.Control.MousePosition.css"', line)
+                
+        # rewrite the file
+        f = open(self.htmlfile, "w")
+        f.writelines(lines)
+        f.close()
+        
     def plot(self):
         self.map.save(self.htmlfile)
+        self.replaceLocalPlugins()
         os.system(self.htmlfile)
         
     def addLines(self, lines, popups=None, tooltips=None):
