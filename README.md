@@ -2,6 +2,10 @@
 
 seomaps is a Python wrapper around Folium for those who just want a quick and dirty way of seeing simple data on a map, with steps required to set it up particularly for an offline node running Windows.
 
+## Folium Dependencies
+
+Many of the plugins, css, js files used by Folium are by default downloaded via online means. As such, for offline use this repo has added submodules for some dependencies with particular versions checked out. The versions for each plugin are as specified [here](https://python-visualization.github.io/folium/plugins.html) and [here](https://python-visualization.github.io/folium/modules.html). The folium version tested is 0.12.1.
+
 ## Prerequisites
 
 Styles, sprites, icons default to [osm-liberty](https://github.com/maputnik/osm-liberty). Clone the repository to retrieve the sprites (really the only folder that we'll need).
