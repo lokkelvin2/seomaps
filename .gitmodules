@@ -22,3 +22,4 @@
 [submodule "folium"]
 	path = folium
 	url = https://github.com/python-visualization/folium
+

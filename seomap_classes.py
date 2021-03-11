@@ -91,6 +91,23 @@ class SMaps:
         
         for line in lines:
             fo.vector_layers.PolyLine(line, color='#ff0000', dash_array="5").add_to(self.map)
+                                      
+    def addAntPaths(self, lines, popups=None, tooltips=None):
+        '''
+        Expects list of lines. Each line is a numpy array of Nx2, with col 0: lat, col 1: lon.
+        '''
+        
+        # if the extras are none then they are all none
+        if popups is None:
+            popups = [None for i in lines]
+        if tooltips is None:
+            tooltips = [None for i in lines]
+        
+        for i in range(len(lines)):
+            line = lines[i]
+            popup = popups[i]
+            tooltip = tooltips[i]
+            fop.AntPath(line, popup, tooltip).add_to(self.map)
         
     def addMousePosition(self):
         fmtr = "function(num) {return L.Util.formatNum(num, 6) + ' º ';};"
@@ -146,5 +163,13 @@ if __name__ == "__main__":
     popups = ['Home', 'Across Home']
     tooltips = ['Home Tooltip', 'Across Home Tooltip']
     smap.addMarkers(points, popups, tooltips, coordTooltips=False, coordPopups=False)
+    
+    # add antpaths?
+    antline1 = np.array([[1.315529, 103.875046],
+                         [1.347760, 103.900075],
+                         [1.399575, 103.875046]])
+
+    smap.addAntPaths([antline1])
+    
     
     smap.plot()
