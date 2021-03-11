@@ -73,6 +73,8 @@ class SMaps:
                 lines[i] = re.sub('<script src=.+?>', '<script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js">', line)
             elif re.search('MousePosition.css', line) is not None:
                 lines[i] = re.sub('href=".+?"', 'href="./Leaflet.MousePosition/src/L.Control.MousePosition.css"', line)
+            elif re.search('leaflet-ant-path', line) is not None:
+                lines[i] = re.sub('<script src=.+?>', '<script src="./unpkg_modules/leaflet-ant-path-1.1.2.js">', line)
                 
         # rewrite the file
         f = open(self.htmlfile, "w")
