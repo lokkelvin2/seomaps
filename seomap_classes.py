@@ -27,6 +27,9 @@ class SMaps:
         # let's standardise adding the mouse position, no harm here
         self.addMousePosition()
         
+        # add some holders for feature groups?
+        self.antPathLayers = []
+        
     def setLocalScripts(self):
         '''One method to set all of them locally.'''
         
@@ -82,6 +85,9 @@ class SMaps:
         f.close()
         
     def plot(self):
+        # add the layer control
+        fo.LayerControl().add_to(self.map)
+        
         self.map.save(self.htmlfile)
         self.replaceLocalPlugins()
         os.system(self.htmlfile)
@@ -94,7 +100,7 @@ class SMaps:
         for line in lines:
             fo.vector_layers.PolyLine(line, color='#ff0000', dash_array="5").add_to(self.map)
                                       
-    def addAntPaths(self, lines, popups=None, tooltips=None):
+    def addAntPaths(self, lines, popups=None, tooltips=None, labels=None):
         '''
         Expects list of lines. Each line is a numpy array of Nx2, with col 0: lat, col 1: lon.
         '''
@@ -104,13 +110,23 @@ class SMaps:
             popups = [None for i in lines]
         if tooltips is None:
             tooltips = [None for i in lines]
+        if labels is None:
+            labels = ['Trajectory ' + str(i+1) for i in range(len(lines))]
         
         for i in range(len(lines)):
             line = lines[i]
             popup = popups[i]
             tooltip = tooltips[i]
-            fop.AntPath(line, popup, tooltip).add_to(self.map)
-        
+            antpath = fop.AntPath(line, popup, tooltip)
+            
+            # make a new feature group
+            fg = fo.FeatureGroup(labels[i])
+            antpath.add_to(fg)
+            self.antPathLayers.append(fg)
+            
+            # add the feature group to the map
+            self.antPathLayers[-1].add_to(self.map)
+            
     def addMousePosition(self):
         fmtr = "function(num) {return L.Util.formatNum(num, 6) + ' º ';};"
         fop.MousePosition(position='topright', separator=' | ', prefix="Mouse:",
