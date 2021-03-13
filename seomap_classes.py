@@ -78,15 +78,22 @@ class SMaps:
                 lines[i] = re.sub('href=".+?"', 'href="./Leaflet.MousePosition/src/L.Control.MousePosition.css"', line)
             elif re.search('leaflet-ant-path', line) is not None:
                 lines[i] = re.sub('<script src=.+?>', '<script src="./unpkg_modules/leaflet-ant-path-1.1.2.js">', line)
+            elif re.search('leaflet-measure.+?js', line) is not None:
+                lines[i] = re.sub('<script src=.+?>', '<script src="./unpkg_modules/leaflet-measure-2.1.7.js">', line)
+            elif re.search('leaflet-measure.+?css', line) is not None:
+                lines[i] = re.sub('href=".+?"', 'href="./unpkg_modules/leaflet-measure-2.1.7.css"', line)
                 
         # rewrite the file
         f = open(self.htmlfile, "w")
         f.writelines(lines)
         f.close()
         
-    def plot(self):
+    def plot(self, addMeasure=True):
         # add the layer control
         fo.LayerControl().add_to(self.map)
+        
+        if addMeasure:
+            fop.MeasureControl(position='topleft', primary_length_unit='meters', secondary_length_unit='kilometers', primary_area_unit='sqmeters').add_to(self.map)
         
         self.map.save(self.htmlfile)
         self.replaceLocalPlugins()
