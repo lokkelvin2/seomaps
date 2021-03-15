@@ -163,6 +163,22 @@ class SMaps:
                 tooltip = tooltips[i]
                         
             fo.Marker(point, popup, tooltip).add_to(self.map)
+    
+    def buildGeoJsonFeaturePoint(self, point):
+        revpt = list(point)
+        revpt.reverse()
+        
+        gj = {'type': 'Feature'}
+        gj['geometry'] = {'type': "Point", 'coordinates': revpt} # geojson is lon,lat
+        
+        return gj
+        
+    
+    def addGeoJson(self, point):
+        gj = self.buildGeoJsonFeaturePoint(point)
+        print(gj)
+        fo.GeoJson(gj).add_to(self.map)
+        
         
 if __name__ == "__main__":
     print("Running this as a test script!")
@@ -195,6 +211,11 @@ if __name__ == "__main__":
                          [1.399575, 103.875046]])
 
     smap.addAntPaths([antline1])
+    
+    # add a marker as a geojson instead now
+    gjpt = [1.334816, 103.697205]
+    smap.addGeoJson(gjpt)
+    
     
     
     smap.plot()
