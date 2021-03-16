@@ -174,11 +174,23 @@ class SMaps:
         return gj
         
     
-    def addGeoJson(self, point):
+    def addGeoJsonPoint(self, point):
         gj = self.buildGeoJsonFeaturePoint(point)
-        print(gj)
+        
         fo.GeoJson(gj).add_to(self.map)
         
+    def buildGeoJsonFeaturePolygon(self, vertices):
+        revVert = np.flip(vertices, axis=1).tolist()
+        
+        gj = {'type': 'Feature'}
+        gj['geometry'] = {'type': 'Polygon', 'coordinates': [revVert]} # for some reason geojson requires triple list
+        
+        return gj
+        
+    def addGeoJsonPolygon(self, vertices):
+        gj = self.buildGeoJsonFeaturePolygon(vertices)
+        
+        fo.GeoJson(gj).add_to(self.map)
         
 if __name__ == "__main__":
     print("Running this as a test script!")
@@ -213,8 +225,15 @@ if __name__ == "__main__":
     smap.addAntPaths([antline1])
     
     # add a marker as a geojson instead now
-    gjpt = [1.334816, 103.697205]
-    smap.addGeoJson(gjpt)
+    gjpt = np.array([1.334816, 103.697205])
+    smap.addGeoJsonPoint(gjpt)
+    
+    # add a triangle
+    gjvert = np.array([[gjpt[0] + 1e-2, gjpt[1] + 1e-2],
+              [gjpt[0] - 1e-2, gjpt[1]],
+              [gjpt[0], gjpt[1] - 1e-2],
+              [gjpt[0] + 1e-2, gjpt[1] + 1e-2]])
+    smap.addGeoJsonPolygon(gjvert)
     
     
     
