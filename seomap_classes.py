@@ -173,8 +173,10 @@ class SMaps:
                 tooltip = "{:.6f}".format(point[0]) + ", " + "{:.6f}".format(point[1])
             else:
                 tooltip = tooltips[i]
-                        
-            fo.Marker(point, popup, tooltip).add_to(self.map)
+            
+            
+            marker = fo.Marker(point.tolist(), popup, tooltip)
+            marker.add_to(self.map)
     
     def buildGeoJsonFeaturePoint(self, point):
         revpt = list(point)
