@@ -90,8 +90,10 @@ class SMaps:
                 
         
         # testing retrieval of labels
-        print(smap.retrieveGeoJsonLabel(lines,0))
-        print(smap.retrieveGeoJsonLabel(lines,1))
+        gjptLabel = smap.retrieveGeoJsonLabel(lines,0)
+        gjPolyLabel = smap.retrieveGeoJsonLabel(lines,1)
+        
+        
         
         # rewrite the file
         f = open(self.htmlfile, "w")
@@ -216,6 +218,16 @@ class SMaps:
                 break
         
         return gjLabel
+    
+    def addPolygonMouseoverForPoint(self, pointlabel, polylabel):
+        '''
+        mouseover: function(e) {
+			geo_json_dd5411019a494db3b87c995304634410.addTo(map_29637f6b5aa54837b050253ea47f7a65);
+		},
+		mouseout: function(e) {
+			geo_json_dd5411019a494db3b87c995304634410.removeFrom(map_29637f6b5aa54837b050253ea47f7a65);
+		}
+        '''
         
         
 if __name__ == "__main__":
