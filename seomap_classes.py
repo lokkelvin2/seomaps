@@ -30,6 +30,10 @@ class SMaps:
         # add some holders for feature groups?
         self.antPathLayers = []
         
+        # add indices for geojsons
+        self.geojsonIdx = 0
+        self.gjIdxForMouseover = []
+        
     def setLocalScripts(self):
         '''One method to set all of them locally.'''
         
@@ -83,6 +87,12 @@ class SMaps:
             elif re.search('leaflet-measure.+?css', line) is not None:
                 lines[i] = re.sub('href=".+?"', 'href="./unpkg_modules/leaflet-measure-2.1.7.css"', line)
                 
+                
+        
+        # testing retrieval of labels
+        print(smap.retrieveGeoJsonLabel(lines,0))
+        print(smap.retrieveGeoJsonLabel(lines,1))
+        
         # rewrite the file
         f = open(self.htmlfile, "w")
         f.writelines(lines)
@@ -170,6 +180,8 @@ class SMaps:
         
         gj = {'type': 'Feature'}
         gj['geometry'] = {'type': "Point", 'coordinates': revpt} # geojson is lon,lat
+        gj['properties'] = {'geojsonIdx': self.geojsonIdx}
+        self.geojsonIdx = self.geojsonIdx + 1
         
         return gj
         
@@ -184,6 +196,8 @@ class SMaps:
         
         gj = {'type': 'Feature'}
         gj['geometry'] = {'type': 'Polygon', 'coordinates': [revVert]} # for some reason geojson requires triple list
+        gj['properties'] = {'geojsonIdx': self.geojsonIdx}
+        self.geojsonIdx = self.geojsonIdx + 1
         
         return gj
         
@@ -191,6 +205,18 @@ class SMaps:
         gj = self.buildGeoJsonFeaturePolygon(vertices)
         
         fo.GeoJson(gj).add_to(self.map)
+        
+    def retrieveGeoJsonLabel(self,lines,idx):
+        for i in range(len(lines)):
+            line = lines[i]
+            
+            if re.search('geojsonIdx.+?'+str(idx), line) is not None:
+                rr = re.search('geo_json_.+_', line)
+                gjLabel = rr.group()[9:-1]
+                break
+        
+        return gjLabel
+        
         
 if __name__ == "__main__":
     print("Running this as a test script!")
@@ -234,7 +260,6 @@ if __name__ == "__main__":
               [gjpt[0], gjpt[1] - 1e-2],
               [gjpt[0] + 1e-2, gjpt[1] + 1e-2]])
     smap.addGeoJsonPolygon(gjvert)
-    
     
     
     smap.plot()
