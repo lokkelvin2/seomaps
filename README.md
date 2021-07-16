@@ -13,24 +13,26 @@ Using osm-liberty cause it's prettier.
 
 Install Docker. We'll be using [Tileserver GL](https://tileserver.readthedocs.io/en/latest/installation.html) via Docker.
 
+Obtain or purchase planet tiles (.mbtiles format) from [Maptiler](https://data.maptiler.com/downloads/tileset/osm/).
+
 ## Usage
 
-Detailed commands may be found in the text files, but the general command on Windows will look something like
+Clone this repository and then pull all the submodules.
 
 ```bash
-docker run --rm -it -v /f/tilestest:/data -p 8080:8080 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose -c osm_liberty_config.json
+git clone https://github.com/icyveins7/seomaps.git
+git submodule update --init --recursive
 ```
 
-where the directory used here to store the tiles is
+Copy the .mbtiles file into this repository folder as we will be assuming it resides there.
+
+Run the batch file 
 
 ```bash
-F:\tilestest
+dockerStartCmd.bat
 ```
 
-and so the docker argument "-v /f/tilestest:/data" should be changed to "-v whatever/your/path/is:/data".
-
-Remember to transfer the 'sprites' folder from osm-liberty into the 'data' folder.
-
+to start the docker container that loads the tiles and styles them according to osm-liberty.
 
 ## Offline Usage
 
@@ -56,7 +58,7 @@ docker image load -i tileserver-gl.tar
 You should now be able to run the command from the previous section
 
 ```bash
-docker run ....
+dockerStartCmd.bat
 ```
 
 and it should find the existing image.
@@ -95,9 +97,10 @@ wsl --import docker-desktop-data E:\docker-desktop\data D:\sometempdir\docker-de
 
 1) Specified path for "fonts" does not exist (/usr/src/app/node_modules/tileserver-gl/fonts).
 
-Run the default tileserver command without a config.json but with verbose output i.e.
+Run the default tileserver command without a config.json but with verbose output; this is contained in 
+
 ```bash
-docker run --rm -it -v /f/tilestest:/data -p 8080:8080 maptiler/tileserver-gl --mbtiles osm-2017-07-03-v3_6_1-planet.mbtiles --verbose
+dockerStartCmdRaw.bat
 ```
 
 Observe the output of the config.json, and amend the 'root' in the custom config.json accordingly. Likely this will be /app/node_modules/tileserver-gl/fonts i.e. without /usr/src.
