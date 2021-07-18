@@ -110,6 +110,8 @@ class SMaps:
         
         self.map.save(self.htmlfile)
         self.replaceLocalPlugins()
+        # add fileloader
+        self.addFileLoader() 
         os.system(self.htmlfile)
         
     def addLines(self, lines, popups=None, tooltips=None):
@@ -233,6 +235,21 @@ class SMaps:
 			geo_json_dd5411019a494db3b87c995304634410.removeFrom(map_29637f6b5aa54837b050253ea47f7a65);
 		}
         '''
+    
+    def addFileLoader(self):
+        with open(self.htmlfile) as fp:
+            soup = bs4.BeautifulSoup(fp, 'html.parser')
+        
+        # Add leaflet.filelayer js
+        soup.insert(len(soup.contents)-1,soup.new_tag('link', rel="stylesheet",href="./Leaflet.filelayer/leaflet.filelayerstyle.css"))
+        soup.insert(len(soup.contents)-1,soup.new_tag('script', src = "./Leaflet.filelayer/togeojson.js"))
+        soup.insert(len(soup.contents)-1,soup.new_tag('script', src = "./Leaflet.filelayer/leaflet.filelayer.js"))
+        js = """L.Control.FileLayerLoad.LABEL='<img class="icon" src="./Leaflet.filelayer/folder.svg" alt="file icon"/>';var style_fl={color:"red",opacity:1,fillOpacity:.2,weight:2};control=L.Control.fileLayerLoad({fitBounds:!0,layerOptions:{style:style_fl,pointToLayer:function(l,e){return L.circleMarker(e,{style:style_fl})}}});
+        control.addTo("""+self.map.get_name()+""");control.loader.on("data:loaded",function(o){var a=o.layer;console.log(a)});"""
+        soup.find_all('script')[-1].append(js)
+        with open(self.htmlfile, 'w') as fp:
+            fp.write(str(soup))
+       
         
 #%% Derived class for vector tiles
 class SVecMaps(SMaps):
@@ -287,6 +304,8 @@ class SVecMaps(SMaps):
         self.replaceLocalPlugins()
         # Call the protobuf layer replacement instead
         self.convertProtobufLayer()
+        # add fileloader
+        self.addFileLoader() 
         os.system(self.htmlfile)
    
 #%%
