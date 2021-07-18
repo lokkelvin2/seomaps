@@ -10,6 +10,7 @@ import os
 import folium as fo
 import folium.plugins as fop
 import re
+import bs4
 
 import numpy as np
 
@@ -76,9 +77,9 @@ class SMaps:
             line = lines[i]
             
             # mousePosition
-            if re.search('MousePosition.js', line) is not None:
+            if re.search('MousePosition.min.js', line) is not None or re.search('MousePosition.js', line) is not None:
                 lines[i] = re.sub('<script src=.+?>', '<script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js">', line)
-            elif re.search('MousePosition.css', line) is not None:
+            elif re.search('MousePosition.min.css', line) is not None or re.search('MousePosition.css', line) is not None:
                 lines[i] = re.sub('href=".+?"', 'href="./Leaflet.MousePosition/src/L.Control.MousePosition.css"', line)
             elif re.search('leaflet-ant-path', line) is not None:
                 lines[i] = re.sub('<script src=.+?>', '<script src="./unpkg_modules/leaflet-ant-path-1.1.2.js">', line)
@@ -211,6 +212,8 @@ class SMaps:
         fo.GeoJson(gj).add_to(self.map)
         
     def retrieveGeoJsonLabel(self,lines,idx):
+        gjLabel = None
+        
         for i in range(len(lines)):
             line = lines[i]
             
@@ -231,7 +234,62 @@ class SMaps:
 		}
         '''
         
+#%% Derived class for vector tiles
+class SVecMaps(SMaps):
+    def __init__(self, tiles="http://localhost:8080/data/v3/{z}/{x}/{y}.pbf"):
+        super().__init__(tiles)
         
+        self.htmlfile = "foliumplotvector.html"
+        
+    def convertProtobufLayer(self):
+        # open the file (use beautifulsoup now!)
+        with open(self.htmlfile) as fp:
+            soup = bs4.BeautifulSoup(fp, 'html.parser')
+        
+        # insert the script for vector grid
+        soup.head.append(soup.new_tag("script", src="./unpkg_modules/Leaflet.VectorGrid.bundled.min.js"))
+        
+        # insert patch script which includes the basic style and options
+        soup.head.append(soup.new_tag("script", src="./vectorPatch.js"))
+        
+        # extract the main script
+        mainscript = soup.find_all('script')[-1]
+        # regex replace the tileLayer call to protobuf
+        aa = re.sub("L.tileLayer\(", "L.vectorGrid.protobuf(", mainscript.contents[0]) # the \ in the pattern is required
+        
+        # now find the protobuf call again and replace the argument with the options object
+        eidx = re.search('protobuf\(', aa).end()
+        bb = aa[eidx:]
+        r = re.search("\{.{20,}\}",bb)
+        front = aa[:eidx+r.start()]
+        back = aa[eidx+r.end():]
+        final = front + "openmaptilesVectorTileOptions" + back
+        
+        # make a new tag and set the string
+        newmainscript = soup.new_tag('script')
+        newmainscript.string = final
+        # replace the script
+        mainscript.replace_with(newmainscript)
+
+        # write back
+        with open(self.htmlfile, 'w') as fp:
+            fp.write(str(soup))
+        
+    # Remake the plot function
+    def plot(self, addMeasure=True):
+        # add the layer control
+        fo.LayerControl().add_to(self.map)
+        
+        if addMeasure:
+            fop.MeasureControl(position='topleft', primary_length_unit='meters', secondary_length_unit='kilometers', primary_area_unit='sqmeters').add_to(self.map)
+        
+        self.map.save(self.htmlfile)
+        self.replaceLocalPlugins()
+        # Call the protobuf layer replacement instead
+        self.convertProtobufLayer()
+        os.system(self.htmlfile)
+   
+#%%
 if __name__ == "__main__":
     print("Running this as a test script!")
     smap = SMaps()
@@ -277,3 +335,8 @@ if __name__ == "__main__":
     
     
     smap.plot()
+    
+    ## test vector version
+    svmap = SVecMaps()
+    
+    svmap.plot()

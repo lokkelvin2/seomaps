@@ -15,7 +15,45 @@ Install Docker. We'll be using [Tileserver GL](https://tileserver.readthedocs.io
 
 Obtain or purchase planet tiles (.mbtiles format) from [Maptiler](https://data.maptiler.com/downloads/tileset/osm/).
 
-## Usage
+For python modules, the following should suffice
+
+```bash
+pip install numpy beautifulsoup4 folium
+```
+
+## (New) Usage with Vector Tiles
+
+tileserver-gl-light may be easier to set up, but only works with vector tiles. Since this method
+doesn't go through Docker, loading tiles is faster; however, it currently lacks an easy way to style
+the raster tiles.
+
+First, install Node and install the light version via 
+
+```bash
+npm install -g tileserver-gl-light
+```
+
+Then, clone this repository, the submodules and copy the .mbtiles file into this folder (same as with raster tiles).
+
+```bash
+git clone https://github.com/icyveins7/seomaps.git
+git submodule update --init --recursive
+```
+
+When finished, simply run the tileserver via (for example)
+
+```bash
+tileserver-gl-light osm-2017-07-03-v3_6_1-planet.mbtiles --verbose
+```
+
+To use the map, create an object with 
+
+```python
+svmap = SVecMaps()
+svmap.plot()
+```
+
+## Usage with Raster Tiles
 
 Clone this repository and then pull all the submodules.
 
@@ -33,6 +71,13 @@ dockerStartCmd.bat
 ```
 
 to start the docker container that loads the tiles and styles them according to osm-liberty.
+
+To use the map, create an object with 
+
+```python
+smap = SMaps()
+smap.plot()
+```
 
 ## Offline Usage
 
