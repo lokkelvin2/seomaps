@@ -11,7 +11,7 @@ import folium as fo
 import folium.plugins as fop
 import re
 import bs4
-
+from foliumpatch import LayerControlJS
 import numpy as np
 
 class SMaps:
@@ -103,7 +103,8 @@ class SMaps:
         
     def plot(self, addMeasure=True):
         # add the layer control
-        fo.LayerControl().add_to(self.map)
+        layer_control_obj = LayerControlJS()
+        layer_control_obj.add_to(self.map)
         
         if addMeasure:
             fop.MeasureControl(position='topleft', primary_length_unit='meters', secondary_length_unit='kilometers', primary_area_unit='sqmeters').add_to(self.map)
@@ -111,8 +112,8 @@ class SMaps:
         self.map.save(self.htmlfile)
         self.replaceLocalPlugins()
         # add fileloader
-        self.addFileLoader() 
-        os.system(self.htmlfile)
+        self.addFileLoader(layer_control_obj) 
+        # os.system(self.htmlfile)
         
     def addLines(self, lines, popups=None, tooltips=None):
         '''
@@ -236,17 +237,16 @@ class SMaps:
 		}
         '''
     
-    def addFileLoader(self):
+    def addFileLoader(self,layer_control_obj):
         with open(self.htmlfile) as fp:
             soup = bs4.BeautifulSoup(fp, 'html.parser')
-        
-        # Add leaflet.filelayer js
-        soup.insert(len(soup.contents)-1,soup.new_tag('link', rel="stylesheet",href="./Leaflet.filelayer/leaflet.filelayerstyle.css"))
-        soup.insert(len(soup.contents)-1,soup.new_tag('script', src = "./Leaflet.filelayer/togeojson.js"))
-        soup.insert(len(soup.contents)-1,soup.new_tag('script', src = "./Leaflet.filelayer/leaflet.filelayer.js"))
-        js = """L.Control.FileLayerLoad.LABEL='<img class="icon" src="./Leaflet.filelayer/folder.svg" alt="file icon"/>';var style_fl={color:"red",opacity:1,fillOpacity:.2,weight:2};control=L.Control.fileLayerLoad({fitBounds:!0,layerOptions:{style:style_fl,pointToLayer:function(l,e){return L.circleMarker(e,{style:style_fl})}}});
-        control.addTo("""+self.map.get_name()+""");control.loader.on("data:loaded",function(o){var a=o.layer;console.log(a)});"""
-        soup.find_all('script')[-1].append(js)
+        # using HTML drag and drop DOM events https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+        # using geojson-vt in L.vectorGrid.slicer because it is much faster
+        # uses less javascript making code more portable
+        soup.body.insert(len(soup.body)-1,bs4.BeautifulSoup("""<div id="DebugBox" style="position: absolute;bottom:0px;height:10%;width:100%;background-color: white; border-color: black; border-width:10px; padding:5px; opacity:0.9;overflow: auto"> <b>Debugging box </div>""",'html.parser'))
+        minifiedjs = """var dropArea=document.getElementById('"""+self.map.get_name()+"""'),debugBox=document.getElementById("DebugBox");dropArea.ondragover=function(){return!1},dropArea.ondragend=function(){return!1},dropArea.ondrop=function(e){console.log("Dropped onto map");var r=new FileReader;r.readAsText(e.dataTransfer.files[0]),r.fileName=e.dataTransfer.files[0].name.toString(),debugBox.innerHTML+="<br/>",debugBox.innerHTML+="<br/>Loading... "+e.dataTransfer.files[0].name.toString();var t=(new Date).getTime();return r.onload=function(e){var r,n,o=(new Date).setTime((new Date).getTime()-t);debugBox.innerHTML+=" took "+o+"ms";try{var a;debugBox.innerHTML+="<br/>&nbsp;Parsing... "+(r=e.target.result.length,n=Math.floor(Math.log(r)/Math.log(1024)),Math.round(r/Math.pow(1024,n)*100)/100+" "+["B","kB","MB","GB"][n]),t=(new Date).getTime(),a=JSON.parse(e.target.result);var i=L.vectorGrid.slicer(a,{rendererFactory:L.canvas.tile,vectorTileLayerStyles:{sliced:function(e,r){return{fillColor:"red",fillOpacity:.2,stroke:!0,fill:!0,color:"red",opacity:1,weight:1} } },maxZoom:24,tolerance:3,extent:4096,buffer:64,debug:0,lineMetrics:!1,promoteId:null,generateId:!1,indexMaxZoom:5,indexMaxPoints:1e5}).addTo("""+self.map.get_name()+""");"""+layer_control_obj.get_name()+"_obj"+""".addOverlay(i,e.target.fileName),o=(new Date).setTime((new Date).getTime()-t),debugBox.innerHTML+=" took "+o+"ms"}catch(e){debugBox.innerHTML+="<br/>&nbsp;Error: "+e} },e.preventDefault(),!1};"""
+        soup.find_all('script')[-1].append(minifiedjs)
+
         with open(self.htmlfile, 'w') as fp:
             fp.write(str(soup))
        
@@ -295,7 +295,8 @@ class SVecMaps(SMaps):
     # Remake the plot function
     def plot(self, addMeasure=True):
         # add the layer control
-        fo.LayerControl().add_to(self.map)
+        layer_control_obj = LayerControlJS()
+        layer_control_obj.add_to(self.map)
         
         if addMeasure:
             fop.MeasureControl(position='topleft', primary_length_unit='meters', secondary_length_unit='kilometers', primary_area_unit='sqmeters').add_to(self.map)
@@ -305,8 +306,8 @@ class SVecMaps(SMaps):
         # Call the protobuf layer replacement instead
         self.convertProtobufLayer()
         # add fileloader
-        self.addFileLoader() 
-        os.system(self.htmlfile)
+        self.addFileLoader(layer_control_obj) 
+        # os.system(self.htmlfile)
    
 #%%
 if __name__ == "__main__":
@@ -353,7 +354,7 @@ if __name__ == "__main__":
     smap.addGeoJsonPolygon(gjvert)
     
     
-    smap.plot()
+    # smap.plot()
     
     ## test vector version
     svmap = SVecMaps()
