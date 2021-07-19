@@ -179,7 +179,7 @@ var openmaptilesVectorTileOptions = {
 	vectorTileLayerStyles: vectorTileStyling,
 	subdomains: 'abc',
 	maxZoom: 24,
-	maxNativeZoom: 24,
+	maxNativeZoom: 14,
 	detectRetina: false,
 	noWrap: false,
 	opacity: 1,
