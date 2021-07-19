@@ -113,7 +113,7 @@ class SMaps:
         self.replaceLocalPlugins()
         # add fileloader
         self.addFileLoader(layer_control_obj) 
-        # os.system(self.htmlfile)
+        os.system(self.htmlfile)
         
     def addLines(self, lines, popups=None, tooltips=None):
         '''
@@ -307,7 +307,7 @@ class SVecMaps(SMaps):
         self.convertProtobufLayer()
         # add fileloader
         self.addFileLoader(layer_control_obj) 
-        # os.system(self.htmlfile)
+        os.system(self.htmlfile)
    
 #%%
 if __name__ == "__main__":
@@ -354,7 +354,7 @@ if __name__ == "__main__":
     smap.addGeoJsonPolygon(gjvert)
     
     
-    # smap.plot()
+    smap.plot()
     
     ## test vector version
     svmap = SVecMaps()
