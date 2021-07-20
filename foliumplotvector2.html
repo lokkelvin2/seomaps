@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+<style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+<script src="./Leaflet/dist/leaflet.js"></script>
+<script src="./jquery/dist/jquery.min.js"></script>
+<script src="./bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="./Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+<link href="./Leaflet/dist/leaflet.css" rel="stylesheet"/>
+<link href="./bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="./bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
+<link href="./Font-Awesome/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="./Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" rel="stylesheet"/>
+<link href="./folium/folium/templates/leaflet.awesome.rotate.css" rel="stylesheet"/>
+<meta content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<style>
+                #map_9b806b17c6cf4600ad391a054dfbd71c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+<script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js"></script>
+<link href="./Leaflet.MousePosition/src/L.Control.MousePosition.css" rel="stylesheet"/>
+<script src="./unpkg_modules/leaflet-measure-2.1.7.js"></script>
+<link href="./unpkg_modules/leaflet-measure-2.1.7.css" rel="stylesheet"/>
+<script src="./unpkg_modules/Leaflet.VectorGrid.bundled.min.js"></script><script src="./vectorPatch.js"></script></head>
+<script src="./unpkg_modules/geojson-vt.js"></script>
+<body>
+<div class="folium-map" id="map_9b806b17c6cf4600ad391a054dfbd71c"></div>
+<div id="DebugBox" style="position: absolute;bottom:0px;height:10%;width:100%;background-color: white;
+                          border-color: black; border-width:10px; padding:5px; opacity:0.9;overflow: auto">
+        <b>Debugging box</b>
+    </div>
+</body>
+<!-- <link href="./Leaflet.filelayer/leaflet.filelayerstyle.css" rel="stylesheet"/><script src="./Leaflet.filelayer/togeojson.js"></script><script src="./Leaflet.filelayer/leaflet.filelayer.js"></script> -->
+<link href="./Leaflet.filelayer/leaflet.filelayerstyle.css" rel="stylesheet"/>
+<script src="./leaflet.filelayer.patch.js"></script>
+<script>    
+    
+    var map_9b806b17c6cf4600ad391a054dfbd71c = L.map(
+        "map_9b806b17c6cf4600ad391a054dfbd71c",
+        {
+            center: [0, 0],
+            crs: L.CRS.EPSG3857,
+            zoom: 1,
+            zoomControl: true,
+            preferCanvas: false,
+        }
+    );
+
+    
+    // const fs = require('fs');
+    // var stylesource = JSON.parse(fs.readFileSync('./osm-liberty-gh-pages/style.json', 'utf8'));
+    // openmaptilesVectorTileOptions = {
+    //     rendererFactory: L.canvas.tile,
+    //     attribution: "<a href=\"https://github.com/maputnik/osm-liberty\">&copy; OSM-Liberty</a>, <a href=\"http://www.openstreetmap.org/copyright\">&copy; OpenStreetMap</a> contributors",
+    //     // "maxZoom": 14,
+    //     // "maxNativeZoom": 14,
+    //     detectRetina: false,
+    //     noWrap: false,
+    //     opacity: 1.0,
+    //     tms: false,
+    //     vectorTileLayerStyles: stylesource
+    // };
+    
+
+    var tile_layer_f288e31fb80644fea5fc8259e09584f6 = L.vectorGrid.protobuf(
+        "http://localhost:8080/data/v3/{z}/{x}/{y}.pbf",
+        openmaptilesVectorTileOptions
+    ).addTo(map_9b806b17c6cf4600ad391a054dfbd71c);
+
+
+    var mouse_position_ae6edac6e7a342528604fcae63266910 = new L.Control.MousePosition(
+        {"emptyString": "Unavailable", "lngFirst": false, "numDigits": 5, "position": "topright", "prefix": "Mouse:", "separator": " | "}
+    );
+    mouse_position_ae6edac6e7a342528604fcae63266910.options["latFormatter"] =
+        function(num) {return L.Util.formatNum(num, 6) + ' º ';};;
+    mouse_position_ae6edac6e7a342528604fcae63266910.options["lngFormatter"] =
+        function(num) {return L.Util.formatNum(num, 6) + ' º ';};;
+    map_9b806b17c6cf4600ad391a054dfbd71c.addControl(mouse_position_ae6edac6e7a342528604fcae63266910);
+
+
+    var layer_control_423a1380c73245bda43f25fca5cd055a = {
+        base_layers : {
+            "http://localhost:8080/data/v3/{z}/{x}/{y}.pbf" : tile_layer_f288e31fb80644fea5fc8259e09584f6,
+        },
+        overlays :  {
+        },
+    };
+    var map_layer_control = L.control.layers(
+        layer_control_423a1380c73245bda43f25fca5cd055a.base_layers,
+        layer_control_423a1380c73245bda43f25fca5cd055a.overlays,
+        {"autoZIndex": true, "collapsed": true, "position": "topright"}
+    ).addTo(map_9b806b17c6cf4600ad391a054dfbd71c);
+
+
+    var measure_control_00d0a71e647c4b1f8229e41ec8ec7f7e = new L.Control.Measure(
+        {"position": "topleft", "primaryAreaUnit": "sqmeters", "primaryLengthUnit": "meters", "secondaryAreaUnit": "acres", "secondaryLengthUnit": "kilometers"});
+    map_9b806b17c6cf4600ad391a054dfbd71c.addControl(measure_control_00d0a71e647c4b1f8229e41ec8ec7f7e);
+
+    // using HTML drag and drop DOM events https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+    var dropArea = document.getElementById('map_9b806b17c6cf4600ad391a054dfbd71c');
+    var debugBox = document.getElementById('DebugBox');
+    // dropArea.ondragover = function () {
+    //     return false;
+    // };
+    // dropArea.ondragend = function () {
+    //     return false;
+    // };
+
+    // dropArea.ondrop = function (e) {
+    //     // -- helper from viz.js test of geojson-vt
+    //     function humanFileSize(size) {
+    //         var i = Math.floor(Math.log(size) / Math.log(1024));
+    //         return Math.round(100 * (size / Math.pow(1024, i))) / 100 + ' ' + ['B', 'kB', 'MB', 'GB'][i];
+    //     }
+    //     console.log('Dropped onto map')
+    //     var reader = new FileReader();
+        
+    //     reader.readAsText(e.dataTransfer.files[0]);
+    //     reader.fileName = e.dataTransfer.files[0].name.toString();
+    //     debugBox.innerHTML += "<br/>";
+    //     debugBox.innerHTML += "<br/>Loading... " + e.dataTransfer.files[0].name.toString();
+    //     var start = new Date().getTime();
+    //     reader.onload = function (event) {
+    //         var elapsed = new Date().setTime(new Date().getTime() - start);
+    //         debugBox.innerHTML += " took " + elapsed + "ms";
+    //         try {
+    //             debugBox.innerHTML += "<br/>&nbsp;Parsing... " + humanFileSize(event.target.result.length);
+    //             start = new Date().getTime();
+    //             var data;
+    //             data = JSON.parse(event.target.result);
+    //             var vectorGridGeojsonvt = L.vectorGrid.slicer(data, {
+    //                 rendererFactory: L.canvas.tile,
+    //                 vectorTileLayerStyles: {
+    //                     sliced: function(properties, zoom) {
+    //                         return {
+    //                             fillColor: 'red',
+    //                             fillOpacity: 0.2,
+    //                             stroke: true,
+    //                             fill: true,
+    //                             color: 'red',
+    //                             opacity: 1.0,
+    //                             weight: 1,
+    //                         };
+    //                     },
+    //                 },
+    //                 // geojson-vt options
+    //                 maxZoom: 24,  // max zoom to preserve detail on; can't be higher than 24
+    //                 tolerance: 3, // simplification tolerance (higher means simpler)
+    //                 extent: 4096, // tile extent (both width and height)
+    //                 buffer: 64,   // tile buffer on each side
+    //                 debug: 0,     // logging level (0 to disable, 1 or 2)
+    //                 lineMetrics: false, // whether to enable line metrics tracking for LineString/MultiLineString features
+    //                 promoteId: null,    // name of a feature property to promote to feature.id. Cannot be used with `generateId`
+    //                 generateId: false,  // whether to generate feature ids. Cannot be used with `promoteId`
+    //                 indexMaxZoom: 5,       // max zoom in the initial tile index
+    //                 indexMaxPoints: 100000 // max number of points per tile in the index
+    //             }).addTo(map_9b806b17c6cf4600ad391a054dfbd71c);
+                
+                
+    //             //add it to a control
+    //             map_layer_control.addOverlay(vectorGridGeojsonvt, event.target.fileName);
+    //             elapsed = new Date().setTime(new Date().getTime() - start);
+    //             debugBox.innerHTML += " took " + elapsed + "ms";
+                
+
+
+    //         } catch (err) {
+    //             debugBox.innerHTML += "<br/>&nbsp;Error: " + err;
+    //         }
+            
+
+    //     };
+
+    //     e.preventDefault();
+    //     return false;
+    // };
+
+    L.Control.FileLayerLoad.LABEL = '<img class="icon" src="./Leaflet.filelayer/folder.svg" alt="file icon"/>';
+    filelayerloadcontrol = L.Control.fileLayerLoad(
+        map_9b806b17c6cf4600ad391a054dfbd71c,
+        map_layer_control,
+        debugBox,
+        {
+            position: 'topleft',
+        });
+    filelayerloadcontrol.addTo(map_9b806b17c6cf4600ad391a054dfbd71c);
+
+</script>
