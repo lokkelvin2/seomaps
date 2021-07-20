@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <style>
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+    </style>
+    <script src="./Leaflet/dist/leaflet.js"></script>
+    <script src="./jquery/dist/jquery.min.js"></script>
+    <script src="./bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+    <link href="./Leaflet/dist/leaflet.css" rel="stylesheet" />
+    <link href="./bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+        href="./bootstrap/dist/css/bootstrap-theme.min.css"
+        rel="stylesheet"
+    />
+    <link href="./Font-Awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link
+        href="./Leaflet.awesome-markers/dist/leaflet.awesome-markers.css"
+        rel="stylesheet"
+    />
+    <link
+        href="./folium/folium/templates/leaflet.awesome.rotate.css"
+        rel="stylesheet"
+    />
+    <meta
+        content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        name="viewport"
+    />
+    <style>
+        #map_7786f1edfbea4c639a67468c6959d37b {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            left: 0%;
+            top: 0%;
+        }
+    </style>
+    <script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js"></script>
+    <link
+        href="./Leaflet.MousePosition/src/L.Control.MousePosition.css"
+        rel="stylesheet"
+    />
+    <script src="./unpkg_modules/leaflet-measure-2.1.7.js"></script>
+    <link href="./unpkg_modules/leaflet-measure-2.1.7.css" rel="stylesheet" />
+    <script src="./unpkg_modules/Leaflet.VectorGrid.bundled.min.js"></script>
+    <script src="./vectorPatch.js"></script>
+</head>
+
+<body>
+    <div class="folium-map" id="map_7786f1edfbea4c639a67468c6959d37b"></div>
+</body>
+<link href="./Leaflet.filelayer/leaflet.filelayerstyle.css" rel="stylesheet" />
+<script src="./Leaflet.filelayer/togeojson.js"></script>
+<script src="./Leaflet.filelayer/leaflet.filelayer.js"></script>
+<script>
+    var map_7786f1edfbea4c639a67468c6959d37b = L.map(
+        "map_7786f1edfbea4c639a67468c6959d37b",
+        {
+            center: [0, 0],
+            crs: L.CRS.EPSG3857,
+            zoom: 1,
+            zoomControl: true,
+            preferCanvas: false,
+        }
+    );
+
+    var tile_layer_e5af4f0a0e024076a26a8b35e90c1b50 = L.vectorGrid
+        .protobuf(
+            "http://localhost:8080/data/v3/{z}/{x}/{y}.pbf",
+            openmaptilesVectorTileOptions
+        )
+        .addTo(map_7786f1edfbea4c639a67468c6959d37b);
+
+    var mouse_position_f249569635f1421a9f376b8cf839e5a8 =
+        new L.Control.MousePosition({
+            emptyString: "Unavailable",
+            lngFirst: false,
+            numDigits: 5,
+            position: "topright",
+            prefix: "Mouse:",
+            separator: " | ",
+        });
+    mouse_position_f249569635f1421a9f376b8cf839e5a8.options["latFormatter"] =
+        function (num) {
+            return L.Util.formatNum(num, 6) + " º ";
+        };
+    mouse_position_f249569635f1421a9f376b8cf839e5a8.options["lngFormatter"] =
+        function (num) {
+            return L.Util.formatNum(num, 6) + " º ";
+        };
+    map_7786f1edfbea4c639a67468c6959d37b.addControl(
+        mouse_position_f249569635f1421a9f376b8cf839e5a8
+    );
+
+    var layer_control_5c3f69c463a449ca84782a5499877d5e = {
+        base_layers: {
+            "http://localhost:8080/data/v3/{z}/{x}/{y}.pbf":
+                tile_layer_e5af4f0a0e024076a26a8b35e90c1b50,
+        },
+        overlays: {},
+    };
+    L.control
+        .layers(
+            layer_control_5c3f69c463a449ca84782a5499877d5e.base_layers,
+            layer_control_5c3f69c463a449ca84782a5499877d5e.overlays,
+            { autoZIndex: true, collapsed: true, position: "topright" }
+        )
+        .addTo(map_7786f1edfbea4c639a67468c6959d37b);
+
+    var measure_control_94b481c4d34f4dc485d1294e0b0f1cbd =
+        new L.Control.Measure({
+            position: "topleft",
+            primaryAreaUnit: "sqmeters",
+            primaryLengthUnit: "meters",
+            secondaryAreaUnit: "acres",
+            secondaryLengthUnit: "kilometers",
+        });
+    map_7786f1edfbea4c639a67468c6959d37b.addControl(
+        measure_control_94b481c4d34f4dc485d1294e0b0f1cbd
+    );
+
+    L.Control.FileLayerLoad.LABEL =
+        '<img class="icon" src="./Leaflet.filelayer/folder.svg" alt="file icon"/>';
+    var style_fl = { color: "red", opacity: 1, fillOpacity: 0.2, weight: 2 };
+    control = L.Control.fileLayerLoad({
+        fitBounds: !0,
+        layerOptions: {
+            style: style_fl,
+            pointToLayer: function (l, e) {
+                return L.circleMarker(e, { style: style_fl });
+            },
+        },
+        fileSizeLimit: 1000000000,
+    });
+    control.addTo(map_7786f1edfbea4c639a67468c6959d37b);
+    control.loader.on("data:loaded", function (o) {
+        var a = o.layer;
+        console.log(a);
+    });
+</script>
