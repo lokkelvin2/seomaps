@@ -23,3 +23,6 @@
 	path = folium
 	url = https://github.com/python-visualization/folium
 
+[submodule "Leaflet.StyleEditor"]
+	path = Leaflet.StyleEditor
+	url = https://github.com/dwilhelm89/Leaflet.StyleEditor.git
