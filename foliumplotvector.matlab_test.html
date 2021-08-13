@@ -156,6 +156,11 @@
             pointToLayer: function (l, e) {
                 return L.circleMarker(e, { style: style_fl });
             },
+            onEachFeature: function (feature, layer) {
+                //console.log(feature.properties.source);
+                //console.log(layer.name);
+                layer.bindPopup('<h1>'+feature.properties.received_at+'</h1><p>name: '+feature.properties.feeling_lucky+'</p>');
+            },
         },
         fileSizeLimit: 1000000000,
     });
